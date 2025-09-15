@@ -72,11 +72,12 @@ const userSchema = new mongoose.Schema(
     restoredBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     changeCredentialsTime: Date,
     otp: {
-      code: String,
-      expiresAt: Date,
-      attempts: { type: Number, default: 0 },
-      blockedUntil: Date,
-      lastSentAt: Date,
+      code: String, // hashed otp
+      expiresAt: Date, // صلاحية OTP (مثلا دقيقتين)
+      attempts: { type: Number, default: 0 }, // عدد المحاولات
+      blockedUntil: Date, // لو اتحظر
+      lastSentAt: Date, // آخر مرة اتباع OTP (عشان نمنع إعادة الإرسال قبل دقيقتين)
+      verified: { type: Boolean, default: false }, // لو OTP اتأكد صح
     },
   },
   {

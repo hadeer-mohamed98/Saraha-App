@@ -70,103 +70,6 @@ export const login = asyncHandler(async (req, res, next) => {
   return successResponse({ res, data: { credentials } });
 });
 
-// export const sendForgotPassword = asyncHandler(async (req, res, next) => {
-//   const { email } = req.body;
-//   const otp = customAlphabet("0123456789", 6)();
-//   const user = await DBService.findOneAndUpdate({
-//     model: UserModel,
-//     filter: {
-//       email,
-//       confirmEmail: { $exists: true },
-//       deletedAt: { $exists: false },
-//       provider: providerEnum.system,
-//     },
-//     data: {
-//       forgotPasswordOTP: await generateHash({ plaintext: otp }),
-//     },
-//   });
-//   if (!user) {
-//     return next(new Error("invalid email or password", { cause: 404 }));
-//   }
-//   emailEvent.emit("sendForgotPassword", {
-//     to: email,
-//     subject: "Forgot Password",
-//     title: "Reset Password",
-//     otp,
-//   });
-
-//   return successResponse({ res });
-// });
-
-// export const verifyForgotPassword = asyncHandler(async (req, res, next) => {
-//   const { email, otp } = req.body;
-//   const user = await DBService.findOne({
-//     model: UserModel,
-//     filter: {
-//       email,
-//       confirmEmail: { $exists: true },
-//       deletedAt: { $exists: false },
-//       forgotPasswordOTP: { $exists: true },
-//       provider: providerEnum.system,
-//     },
-//   });
-//   if (!user) {
-//     return next(new Error("invalid email or password", { cause: 404 }));
-//   }
-//   if (
-//     !(await compareHash({ plaintext: otp, hashValue: user.forgotPasswordOTP }))
-//   ) {
-//     return next(new Error("invalid otp", { cause: 400 }));
-//   }
-
-//   return successResponse({ res });
-// });
-
-// export const resetPassword = asyncHandler(async (req, res, next) => {
-//   const { email, otp, password } = req.body;
-//   const user = await DBService.findOne({
-//     model: UserModel,
-//     filter: {
-//       email,
-//       confirmEmail: { $exists: true },
-//       deletedAt: { $exists: false },
-//       forgotPasswordOTP: { $exists: true },
-//       provider: providerEnum.system,
-//     },
-//   });
-//   if (!user) {
-//     return next(new Error("invalid email or password", { cause: 404 }));
-//   }
-//   if (
-//     !(await compareHash({ plaintext: otp, hashValue: user.forgotPasswordOTP }))
-//   ) {
-//     return next(new Error("invalid otp", { cause: 400 }));
-//   }
-//   const updatedUser = await DBService.updateOne({
-//     model: UserModel,
-//     filter: {
-//       email,
-//     },
-//     data: {
-//       password: await generateHash({ plaintext: password }),
-//       changeCredentialsTime: new Date(),
-//       $unset: {
-//         forgotPasswordOTP: 1,
-//       },
-//     },
-//   });
-
-//   return updatedUser.matchedCount
-//     ? successResponse({ res })
-//     : next(new Error("Fail to reset Account Password"));
-// });
-
-
-
-// ============================
-// Send Forgot Password OTP
-// ============================
-
 export const sendForgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
   const user = await DBService.findOne({
@@ -218,7 +121,6 @@ export const sendForgotPassword = asyncHandler(async (req, res, next) => {
 
   return successResponse({ res, message: "OTP sent successfully" });
 });
-
 
 // ============================
 // Verify Forgot Password OTP

@@ -71,6 +71,13 @@ const userSchema = new mongoose.Schema(
     restoredAt: Date,
     restoredBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     changeCredentialsTime: Date,
+    otp: {
+      code: String,
+      expiresAt: Date,
+      attempts: { type: Number, default: 0 },
+      blockedUntil: Date,
+      lastSentAt: Date,
+    },
   },
   {
     timestamps: true,
